@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate, Outlet } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import Login from './components/login.jsx';
 import Layout from './components/Layout.jsx';
 import SignUp from './components/SignUp.jsx';
+import Profile from './components/profile.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import PendingPage from './pages/PendingPage.jsx';
+import Completepage from './pages/Completepage.jsx';
 
 const App = () => {
   const navigate = useNavigate();
-  
   const [currentUser, setCurrentUser] = useState(() => {
     const stored = localStorage.getItem('currentUser');
     return stored ? JSON.parse(stored) : null;
@@ -21,11 +24,17 @@ const App = () => {
   }, [currentUser]);
 
   const handleAuthSubmit = (data) => {
+    // Store the token if it exists in the response
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+
     const user = {
       email: data.email,
       name: data.name || 'User',
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`
     };
+
     setCurrentUser(user);
     navigate('/', { replace: true });
   };
@@ -36,39 +45,91 @@ const App = () => {
     navigate('/login', { replace: true });
   };
 
-  const ProtectedLayout = () => {
-    return (
-      <Layout user={currentUser} onLogout={handleLogout}>
-        <Outlet />
-      </Layout>
-    );
-  };
-
   return (
     <Routes>
-      <Route 
-        path='/login' 
+      <Route
+        path="/login"
         element={
-          <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-            <Login 
-              onSubmit={handleAuthSubmit} 
-              onSwitchMode={() => navigate('/signup')} 
-            />
-          </div>
-        } 
+          currentUser ? (
+            <Navigate to="/" replace />
+          ) : (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <Login
+                onSubmit={handleAuthSubmit}
+                onSwitchMode={() => navigate('/signup')}
+              />
+            </div>
+          )
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          currentUser ? (
+            <Navigate to="/" replace />
+          ) : (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <SignUp
+                onSubmit={handleAuthSubmit}
+                onSwitchMode={() => navigate('/login')}
+              />
+            </div>
+          )
+        }
+      />
+      {/* Protected Routes */}
+      <Route
+        path="/"
+        element={
+          currentUser ? (
+            <Layout user={currentUser} onLogout={handleLogout}>
+              <Dashboard />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/pending"
+        element={
+          currentUser ? (
+            <Layout user={currentUser} onLogout={handleLogout}>
+              <PendingPage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
+      <Route
+        path="/complete"
+        element={
+          currentUser ? (
+            <Layout user={currentUser} onLogout={handleLogout}>
+              <Completepage />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
       />
       <Route 
-        path='/signup' 
+        path="/profile" 
         element={
-          <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'>
-            <SignUp 
-              onSubmit={handleAuthSubmit} 
-              onSwitchMode={() => navigate('/login')} 
-            />
-          </div>
+          currentUser ? (
+            <Layout user={currentUser} onLogout={handleLogout}>
+              <Profile 
+                user={currentUser} 
+                setCurrentUser={setCurrentUser} 
+                onLogout={handleLogout} 
+              />
+            </Layout>
+          ) : (
+            <Navigate to="/login" replace />
+          )
         } 
       />
-      <Route path='/' element={<ProtectedLayout />} />
     </Routes>
   );
 };

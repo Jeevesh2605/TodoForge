@@ -9,7 +9,7 @@ export default async function authMiddleware(req, res, next){
     if(!authHeader || !authHeader.startsWith('Bearer')){
         return res
         .status(401)
-        .json({success: false, message: "Not Autorized, token missing"});
+        .json({success: false, message: "Not Autorized, token missing"});a
     }
     const token = authHeader.split(" ")[1];
 
