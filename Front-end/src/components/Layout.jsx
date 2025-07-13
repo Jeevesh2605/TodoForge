@@ -21,49 +21,38 @@ const Layout = ({ onLogout, user, children }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       
-      const arr = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.tasks)
-        ? data.tasks
-        : Array.isArray(data?.data)
-        ? data.data
-        : [];
+      console.log('API Response:', data); // Debug log
+      
+      // Simplified processing - focus on the working case
+      let arr = [];
+      if (data && data.success && Array.isArray(data.tasks)) {
+        arr = data.tasks;
+      } else if (Array.isArray(data)) {
+        arr = data;
+      } else {
+        console.warn('Unexpected API response format:', data);
+        arr = [];
+      }
+      
+      console.log('Processed tasks array:', arr);
+      console.log('Tasks array length:', arr.length);
+      console.log('Setting tasks state...');
       
       setTasks(arr);
+      
+      // Verify state update
+      setTimeout(() => {
+        console.log('Tasks state should be updated now');
+      }, 100);
+      
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching tasks:', err);
       setError(err.message || "Could not load tasks.");
       if (err.response?.status === 401) onLogout();
     } finally {
       setLoading(false);
     }
   }, [onLogout]);
-
-  useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
-
-  const stats = useMemo(() => {
-    const completedTasks = tasks.filter(
-      (t) =>
-        t.completed === true ||
-        t.completed === 1 ||
-        (typeof t.completed === "string" && t.completed.toLowerCase() === 'yes')
-    ).length;
-    
-    const totalCount = tasks.length;
-    const pendingCount = totalCount - completedTasks;
-    const completionPercentage = totalCount
-      ? Math.round((completedTasks / totalCount) * 100)
-      : 0;
-    
-    return {
-      totalCount,
-      completedTasks,
-      pendingCount,
-      completionPercentage
-    };
-  }, [tasks]);
 
   const StatCard = ({ title, value, icon }) => (
     <div className='p-2 sm:p-3 rounded-xl bg-white shadow-sm border border-purple-100 hover:shadow-md transition-all duration-300 hover:border-purple-100 group'>
@@ -212,6 +201,15 @@ const Layout = ({ onLogout, user, children }) => {
     </div>
   );
 
+  // Create context object that will be passed to child components
+  const contextValue = {
+    tasks,
+    refreshTasks: fetchTasks,
+    loading,
+    error,
+    stats
+  };
+
   return (
     <div className='min-h-screen bg-gray-50'>
       <Navbar user={user} onLogout={onLogout} />
@@ -226,7 +224,7 @@ const Layout = ({ onLogout, user, children }) => {
             ) : (
               <>
                 <div className='xl:col-span-2 space-y-3 sm:space-y-4'>
-                  {children}
+                  {React.cloneElement(children, { ...contextValue })}
                 </div>
                 <SidebarStats />
               </>
@@ -234,11 +232,11 @@ const Layout = ({ onLogout, user, children }) => {
           </div>
         )}
 
-        {/* Handle Outlet (nested routes) - FIXED: Always provide context */}
+        {/* Handle Outlet (nested routes) */}
         {!children && (
           <div className='grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6'>
             <div className='xl:col-span-2 space-y-3 sm:space-y-4'>
-              <Outlet context={{ tasks, refreshTasks: fetchTasks, loading, error }} />
+              <Outlet context={contextValue} />
             </div>
             <SidebarStats />
           </div>
