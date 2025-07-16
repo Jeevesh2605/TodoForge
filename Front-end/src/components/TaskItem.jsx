@@ -2,29 +2,33 @@ import React, { useEffect, useState } from 'react'
 import { getPriorityColor, MENU_OPTIONS, TI_CLASSES } from '../assets/dummy'
 import { CheckCircle2, MoreVertical, Calendar, Clock } from 'lucide-react'
 import axios from 'axios'
-import { format, isToday } from 'date-fns'
+// import { format, isToday } from 'date-fns'
 import TaskModal from './TaskModal'
 
 const API_BASE = 'http://localhost:4000/api/tasks'
 
 const TaskItem = ({ task, onRefresh, onLogout, showCompleteCheckbox = true, onEdit }) => {
   const [showMenu, setShowMenu] = useState(false)
+  const [isToggling, setIsToggling] = useState(false)
   
-  // Fix: Use task.completed instead of task.isCompleted
-  const [isCompleted, setIsCompleted] = useState(
-    [true, 1, 'yes'].includes(
-      typeof task.completed === 'string' ? task.completed.toLowerCase() : task.completed
-    )
-  )
+// Fix: Use task.completed instead of task.isCompleted
+  const [isCompleted, setIsCompleted] = useState(() => {
+    // Backend stores as boolean, so check for true/false directly
+    return task.completed === true || 
+           task.completed === 1 || 
+           (typeof task.completed === 'string' && 
+            ['yes', 'true', '1'].includes(task.completed.toLowerCase()))
+  })
   const [showEditModal, setShowEditModal] = useState(false)
-  const [subtasks, setSubtasks] = useState(task.subtasks || [])
+  const [subtasks] = useState(task.subtasks || [])
 
   useEffect(() => {
     // Fix: Use task.completed instead of task.isCompleted
     setIsCompleted(
-      [true, 1, 'yes'].includes(
-        typeof task.completed === 'string' ? task.completed.toLowerCase() : task.completed
-      )
+      task.completed === true || 
+      task.completed === 1 || 
+      (typeof task.completed === 'string' && 
+       ['yes', 'true', '1'].includes(task.completed.toLowerCase()))
     )
   }, [task.completed])
 
@@ -69,30 +73,42 @@ const TaskItem = ({ task, onRefresh, onLogout, showCompleteCheckbox = true, onEd
       case 'delete':
         handleDelete()
         break
-      case 'duplicate':
+case 'duplicate':
         // Handle duplicate action
-        console.log('Duplicate action triggered')
         break
       default:
-        console.log('Unknown action:', action)
+        // Unknown action
     }
   }
 
   const borderColor = isCompleted ? "border-green-500" : getPriorityColor(task.priority).split(" ")[0]
 
-  const handleComplete = async () => {
-    const newStatus = isCompleted ? 'No' : 'Yes'
+const handleComplete = async () => {
+    const newStatus = isCompleted ? false : true; // Send boolean instead of string
+    
+    if (isToggling) return; // Prevent multiple clicks
+    
+    setIsToggling(true);
+    
     try {
-      // Fix: Use task._id || task.id
       const taskId = task._id || task.id
-      await axios.put(`${API_BASE}/${taskId}/gp`, { completed: newStatus }, 
+      
+      const response = await axios.put(`${API_BASE}/${taskId}/gp`, { completed: newStatus }, 
         { headers: getAuthHeaders() }
       )
+      
       setIsCompleted(!isCompleted)
-      onRefresh?.()
+      
+      // Force refresh after a short delay to ensure state update
+      setTimeout(() => {
+        onRefresh?.()
+      }, 100);
+      
     } catch (err) {
-      console.error(err)
+      console.error('Error updating completion status:', err)
       if (err.response?.status === 401) onLogout?.()
+    } finally {
+      setIsToggling(false);
     }
   }
 
@@ -119,7 +135,7 @@ const TaskItem = ({ task, onRefresh, onLogout, showCompleteCheckbox = true, onEd
       const today = new Date()
       const taskDate = new Date(date)
       return today.toDateString() === taskDate.toDateString()
-    } catch (error) {
+    } catch {
       return false
     }
   }
@@ -132,22 +148,23 @@ const TaskItem = ({ task, onRefresh, onLogout, showCompleteCheckbox = true, onEd
         return d.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })
       }
       return d.toLocaleDateString()
-    } catch (error) {
+    } catch {
       return '--'
     }
   }
 
-  const progress = subtasks.length ? (subtasks.filter(st => st.completed).length / subtasks.length) * 100 : 0
+  // const progress = subtasks.length ? (subtasks.filter(st => st.completed).length / subtasks.length) * 100 : 0
 
   return (
     <>
       <div className={`${TI_CLASSES.wrapper} ${borderColor}`}>
         <div className={TI_CLASSES.leftContainer}>
-          {showCompleteCheckbox && (
+{showCompleteCheckbox && (
             <button onClick={handleComplete}
-              className={`${TI_CLASSES.completeBtn} ${isCompleted ? 'text-green-500' : 'text-gray-500'}`}>
+              disabled={isToggling}
+              className={`${TI_CLASSES.completeBtn} ${isCompleted ? 'text-green-500' : 'text-gray-500'} ${isToggling ? 'opacity-50 cursor-not-allowed' : ''}`}>
               <CheckCircle2 size={18} className={`${TI_CLASSES.checkboxIconBase} ${
-                isCompleted ? 'fill-green-500' : ''}`} />
+                isCompleted ? 'fill-green-500' : ''} ${isToggling ? 'animate-spin' : ''}`} />
             </button>
           )}
           <div className='flex-1 min-w-0'>

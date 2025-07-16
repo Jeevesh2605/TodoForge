@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () => {
-    await mongoose.connect('mongodb+srv://jeeveshchaurasiya:Bhoomi13@cluster0.vncpsoq.mongodb.net/TodoForge')
-     .then(() => console.log('DB CONNECTED'));
+    try {
+        const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/TodoForge';
+        await mongoose.connect(mongoURI);
+    } catch (error) {
+        console.error('Database connection error:', error);
+        process.exit(1);
+    }
 }

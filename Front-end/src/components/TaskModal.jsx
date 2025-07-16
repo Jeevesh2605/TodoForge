@@ -13,15 +13,19 @@ const TaskModal = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
   useEffect(() => {
     if (!isOpen) return;
     if (taskToEdit) {
-      const normalized = taskToEdit.completed === 'Yes' ||
-        taskToEdit.completed === true ? 'Yes' : 'No';
+      // Normalize the completed status for editing
+      const isCompleted = taskToEdit.completed === true ||
+                         taskToEdit.completed === 1 ||
+                         (typeof taskToEdit.completed === 'string' &&
+                          ['yes', 'true', '1'].includes(taskToEdit.completed.toLowerCase()));
+      
       setTaskData({
         ...DEFAULT_TASK,
         title: taskToEdit.title || '',
         description: taskToEdit.description || '',
         priority: taskToEdit.priority || 'Low',
         dueDate: taskToEdit.dueDate?.split('T')[0] || '',
-        completed: normalized,
+        completed: isCompleted ? 'Yes' : 'No',
         id: taskToEdit._id,
       });
     } else {
@@ -47,16 +51,24 @@ const TaskModal = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
   const handleSubmit = useCallback(async (e) => {
     e.preventDefault(); // Prevent default form submission
     
-    if (taskData.dueDate < today) {
+// Validation
+    if (!taskData.title.trim()) {
+      setError('Task title is required.');
+      return;
+    }
+    
+    if (taskData.dueDate && taskData.dueDate < today) {
       setError('Due date cannot be in the past.');
       return;
     }
+    
     setLoading(true)
     setError(null)
 
     try {
       const isEdit = Boolean(taskData.id);
       const url = isEdit ? `${API_BASE}/${taskData.id}/gp` : `${API_BASE}/gp`;
+      
       const resp = await fetch(url, {
         method: isEdit ? 'PUT' : 'POST',
         headers: getHeaders(),
@@ -65,15 +77,15 @@ const TaskModal = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
       
       if (!resp.ok) {
         if (resp.status === 401) return onLogout?.();
-        const err = await resp.json(); // Fixed: lowercase json()
+        const err = await resp.json();
         throw new Error(err.message || 'Failed to save task')
       }
       
-      const saved = await resp.json(); // Fixed: lowercase json()
+const saved = await resp.json();
       onSave?.(saved);
       onClose();
     } catch (err) {
-      console.error(err)
+      console.error('TaskModal error:', err)
       setError(err.message || 'Unexpected error occurred');
     } finally {
       setLoading(false)
@@ -141,7 +153,7 @@ const TaskModal = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
               <label className='flex items-center gap-1 text-sm font-medium text-gray-700 mb-1'>
                 <Calendar className='w-4 h-4 text-purple-500' /> Due Date
               </label>
-              <input type="date" name='dueDate' required min={today} value={taskData.dueDate}
+              <input type="date" name='dueDate' min={today} value={taskData.dueDate}
                 onChange={handleChange} className={baseControlClasses} />
             </div>
           </div>

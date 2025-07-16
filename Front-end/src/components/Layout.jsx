@@ -9,19 +9,18 @@ const Layout = ({ onLogout, user, children }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [taskUpdateTrigger, setTaskUpdateTrigger] = useState(0);
 
-  const fetchTasks = useCallback(async () => {
+const fetchTasks = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error("No auth token found");
       
-      const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
+const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
         headers: { Authorization: `Bearer ${token}` }
       });
-      
-      console.log('API Response:', data); // Debug log
       
       // Simplified processing - focus on the working case
       let arr = [];
@@ -30,20 +29,10 @@ const Layout = ({ onLogout, user, children }) => {
       } else if (Array.isArray(data)) {
         arr = data;
       } else {
-        console.warn('Unexpected API response format:', data);
         arr = [];
       }
       
-      console.log('Processed tasks array:', arr);
-      console.log('Tasks array length:', arr.length);
-      console.log('Setting tasks state...');
-      
       setTasks(arr);
-      
-      // Verify state update
-      setTimeout(() => {
-        console.log('Tasks state should be updated now');
-      }, 100);
       
     } catch (err) {
       console.error('Error fetching tasks:', err);
@@ -53,6 +42,30 @@ const Layout = ({ onLogout, user, children }) => {
       setLoading(false);
     }
   }, [onLogout]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  // Calculate stats based on current tasks
+  const stats = useMemo(() => {
+    const totalCount = tasks.length;
+    const completedTasks = tasks.filter(task => {
+      return task.completed === true || 
+             task.completed === 1 || 
+             (typeof task.completed === 'string' && 
+              ['yes', 'true', '1'].includes(task.completed.toLowerCase()));
+    }).length;
+    const pendingCount = totalCount - completedTasks;
+    const completionPercentage = totalCount > 0 ? Math.round((completedTasks / totalCount) * 100) : 0;
+    
+    return {
+      totalCount,
+      completedTasks,
+      pendingCount,
+      completionPercentage
+    };
+  }, [tasks]);
 
   const StatCard = ({ title, value, icon }) => (
     <div className='p-2 sm:p-3 rounded-xl bg-white shadow-sm border border-purple-100 hover:shadow-md transition-all duration-300 hover:border-purple-100 group'>
@@ -178,12 +191,19 @@ const Layout = ({ onLogout, user, children }) => {
               </div>
               <span
                 className={`px-2 py-1 text-xs rounded-full shrink-0 ml-2 ${
-                  task.completed
+                  (task.completed === true || 
+                   task.completed === 1 || 
+                   (typeof task.completed === 'string' && 
+                    ['yes', 'true', '1'].includes(task.completed.toLowerCase())))
                     ? 'bg-green-100 text-green-700'
                     : 'bg-fuchsia-100 text-fuchsia-700'
                 }`}
               >
-                {task.completed ? "Done" : "Pending"}
+                {(task.completed === true || 
+                  task.completed === 1 || 
+                  (typeof task.completed === 'string' && 
+                   ['yes', 'true', '1'].includes(task.completed.toLowerCase())))
+                  ? "Done" : "Pending"}
               </span>
             </div>
           ))}
@@ -201,19 +221,23 @@ const Layout = ({ onLogout, user, children }) => {
     </div>
   );
 
-  // Create context object that will be passed to child components
+// Create context object that will be passed to child components
   const contextValue = {
     tasks,
-    refreshTasks: fetchTasks,
+    refreshTasks: () => {
+      fetchTasks();
+      setTaskUpdateTrigger(prev => prev + 1); // Trigger sidebar update
+    },
     loading,
     error,
     stats
   };
+  
 
   return (
     <div className='min-h-screen bg-gray-50'>
       <Navbar user={user} onLogout={onLogout} />
-      <Sidebar user={user} />
+<Sidebar user={user} taskUpdateTrigger={taskUpdateTrigger} />
       
       <div className='ml-0 xl:ml-72 lg:ml-72 md:ml-20 pt-16 p-1 sm:p-2 md:p-2 transition-all duration-300'>
         {/* Handle children (direct rendering) */}

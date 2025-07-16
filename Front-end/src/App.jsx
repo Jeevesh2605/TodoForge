@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import Login from './components/login.jsx';
+import Login from './components/Login.jsx';
 import Layout from './components/Layout.jsx';
 import SignUp from './components/SignUp.jsx';
-import Profile from './components/profile.jsx';
+import Profile from './components/Profile.jsx';
 import Dashboard from './pages/Dashboard.jsx';
 import PendingPage from './pages/PendingPage.jsx';
 import Completepage from './pages/Completepage.jsx';
@@ -77,43 +77,43 @@ const App = () => {
           )
         }
       />
-      {/* Protected Routes */}
+{/* Protected Routes */}
       <Route
         path="/"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout}>
-              <Dashboard />
-            </Layout>
+            <Layout user={currentUser} onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" replace />
           )
         }
-      />
+      >
+        <Route index element={<Dashboard />} />
+      </Route>
       <Route
         path="/pending"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout}>
-              <PendingPage />
-            </Layout>
+            <Layout user={currentUser} onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" replace />
           )
         }
-      />
+      >
+        <Route index element={<PendingPage />} />
+      </Route>
       <Route
         path="/complete"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout}>
-              <Completepage />
-            </Layout>
+            <Layout user={currentUser} onLogout={handleLogout} />
           ) : (
             <Navigate to="/login" replace />
           )
         }
-      />
+      >
+        <Route index element={<Completepage />} />
+      </Route>
       <Route 
         path="/profile" 
         element={

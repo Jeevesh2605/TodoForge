@@ -91,9 +91,9 @@ const Login = ({ onSubmit, onSwitchMode }) => {
       </div>
       
       <form onSubmit={handleSubmit} className='space-y-4'>
-        {fields.map(({ name, type, placeholder, icon: Icon, isPassword }) => (
+        {fields.map(({ name, type, placeholder, icon: IconComponent, isPassword }) => (
           <div key={name} className={INPUTWRAPPER}>
-            <Icon className='text-purple-500 w-5 h-5' />
+            <IconComponent className='text-purple-500 w-5 h-5' />
             <input 
               type={type} 
               placeholder={placeholder} 

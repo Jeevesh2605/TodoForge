@@ -2,13 +2,54 @@ import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { LINK_CLASSES, menuItems, PRODUCTIVITY_CARD, SIDEBAR_CLASSES, TIP_CARD } from '../assets/dummy.jsx';
 import { Lightbulb, Sparkles, Menu, X } from 'lucide-react';
+import axios from 'axios';
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, taskUpdateTrigger }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [productivity] = useState(75);
+  const [productivity, setProductivity] = useState(0);
+  const [tasks, setTasks] = useState([]);
   
-  const username = user?.name || "User";
+const username = user?.name || "User";
   const initial = username.charAt(0).toUpperCase();
+
+  // Fetch tasks and calculate productivity
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (data && data.success && Array.isArray(data.tasks)) {
+          setTasks(data.tasks);
+          
+          // Calculate productivity percentage
+          const totalTasks = data.tasks.length;
+          const completedTasks = data.tasks.filter(task => {
+            return task.completed === true || 
+                   task.completed === 1 || 
+                   (typeof task.completed === 'string' && 
+                    ['yes', 'true', '1'].includes(task.completed.toLowerCase()));
+          }).length;
+          
+          const productivity = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+          setProductivity(productivity);
+        }
+      } catch (error) {
+        console.error('Error fetching tasks for sidebar:', error);
+      }
+    };
+    
+    fetchTasks();
+    
+    // Refresh productivity every 30 seconds
+    const interval = setInterval(fetchTasks, 30000);
+    
+return () => clearInterval(interval);
+  }, [taskUpdateTrigger]); // Re-run when tasks are updated
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "auto";

@@ -13,33 +13,29 @@ const Dashboard = () => {
   const [showModal, setShowModal] = useState(false)
   const [selectedTask, setSelectTask] = useState(null)
   const [filter, setFilter] = useState("all")
+  
 
-  // Add debug logging
-  console.log('Dashboard received tasks:', tasks)
-  console.log('Dashboard tasks length:', tasks.length)
 
   const stats = useMemo(() => ({
     total: tasks.length,
     lowPriority: tasks.filter(t => t.priority?.toLowerCase() === 'low').length,
     mediumPriority: tasks.filter(t => t.priority?.toLowerCase() === 'medium').length,
     highPriority: tasks.filter(t => t.priority?.toLowerCase() === 'high').length,
-    completed: tasks.filter(t => t.completed === true || t.completed === 1 || (
-      typeof t.completed === 'string' && t.completed.toLowerCase() === 'yes'
-    )).length
+    completed: tasks.filter(t => {
+      // Handle boolean values (backend stores as boolean)
+      return t.completed === true || 
+             t.completed === 1 || 
+             (typeof t.completed === 'string' && 
+              ['yes', 'true', '1'].includes(t.completed.toLowerCase()))
+    }).length
   }), [tasks])
 
-  const filteredTasks = useMemo(() => {
-    console.log('Filtering tasks with filter:', filter)
-    console.log('Raw tasks for filtering:', tasks)
-    
+const filteredTasks = useMemo(() => {
     const filtered = tasks.filter(task => {
-      console.log('Processing task:', task)
-      
       switch(filter) {
         case "today":
           // Fix: Check if task has dueDate and handle undefined/null
           if (!task.dueDate) {
-            console.log('Task has no dueDate, excluding from today filter')
             return false
           }
           try {
@@ -47,14 +43,12 @@ const Dashboard = () => {
             const today = new Date()
             return dueDate.toDateString() === today.toDateString()
           } catch (error) {
-            console.log('Invalid dueDate format:', task.dueDate)
             return false
           }
           
         case "week":
           // Fix: Check if task has dueDate and handle undefined/null
           if (!task.dueDate) {
-            console.log('Task has no dueDate, excluding from week filter')
             return false
           }
           try {
@@ -64,7 +58,6 @@ const Dashboard = () => {
             nextWeek.setDate(todayWeek.getDate() + 7)
             return dueDateWeek >= todayWeek && dueDateWeek <= nextWeek
           } catch (error) {
-            console.log('Invalid dueDate format:', task.dueDate)
             return false
           }
           
@@ -73,7 +66,6 @@ const Dashboard = () => {
         case "low":
           // Fix: Handle undefined/null priority
           if (!task.priority) {
-            console.log('Task has no priority, excluding from priority filter')
             return false
           }
           return task.priority.toLowerCase() === filter
@@ -84,11 +76,10 @@ const Dashboard = () => {
       }
     })
     
-    console.log('Filtered tasks:', filtered)
     return filtered
   }, [tasks, filter])
 
-  // SAVING TASKS - Fixed to handle both create and update
+// SAVING TASKS - Fixed to handle both create and update
   const handleTaskSave = useCallback(async (taskData) => {
     try {
       const token = localStorage.getItem('token')
@@ -103,13 +94,11 @@ const Dashboard = () => {
         await axios.put(`${API_BASE}/${taskId}/gp`, taskData, {
           headers: { Authorization: `Bearer ${token}` }
         })
-        console.log('Task updated successfully')
       } else {
         // Create new task
         await axios.post(`${API_BASE}/gp`, taskData, {
           headers: { Authorization: `Bearer ${token}` }
         })
-        console.log('Task created successfully')
       }
       
       // Refresh tasks and close modal

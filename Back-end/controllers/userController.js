@@ -32,7 +32,6 @@ export async function registerUser(req, res){
         res.status(201).json({success: true, token, user:{id: user._id, name: user.name, email: user.email}});
     }
     catch(err){
-        console.log(err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }
@@ -57,7 +56,6 @@ export async function loginUser(req, res){
         res.json({success: true, token, user: {id: user._id, name: user.name, email: user.email}});
     }
     catch(err){
-        console.log(err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }
@@ -71,7 +69,6 @@ export async function getCurrentUser(req, res){
         }
         res.json({success: true, user})
     } catch(err){
-        console.log(err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }
@@ -96,7 +93,6 @@ export async function updateProfile(req, res){
         res.json({success:true, user})
     } 
     catch(err){
-        console.log(err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }
@@ -122,7 +118,6 @@ export async function updatePassword(req, res){
         res.json({success: true, message: "Password updated successfully"});
     }
     catch(err){
-        console.log(err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }

@@ -31,7 +31,6 @@ export default async function authMiddleware(req, res, next) {
         next();
         
     } catch (err) {
-        console.log("JWT verification failed:", err.message);
         
         // Handle different types of JWT errors
         if (err.name === 'TokenExpiredError') {

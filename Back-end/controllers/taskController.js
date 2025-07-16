@@ -9,14 +9,16 @@ export const createTask = async (req, res) => {
       title,
       description,
       priority,
-      dueDate,
+      dueDate: dueDate && typeof dueDate === 'string' && dueDate.trim() !== '' ? dueDate : null,
       completed: completed === 'Yes' || completed === true,
       owner: req.user.id
     });
-    
+
     const saved = await task.save();
+    
     res.status(201).json({ success: true, task: saved });
   } catch (err) {
+    console.error('Error creating task:', err);
     res.status(400).json({ success: false, message: err.message }); // Fixed: message typo
   }
 };
@@ -54,9 +56,11 @@ export const updateTask = async (req, res) => {
   try {
     const data = { ...req.body };
     
+    
     // Handle completed field conversion
     if (data.completed !== undefined) {
-      data.completed = data.completed === 'YES' || data.completed === true;
+      const originalCompleted = data.completed;
+      data.completed = data.completed === 'Yes' || data.completed === 'YES' || data.completed === true;
     }
     
     const updated = await Task.findOneAndUpdate(
@@ -74,6 +78,7 @@ export const updateTask = async (req, res) => {
     
     res.json({ success: true, task: updated });
   } catch (err) {
+    console.error('🔍 Backend updateTask: Error:', err);
     res.status(500).json({
       success: false,
       message: err.message
