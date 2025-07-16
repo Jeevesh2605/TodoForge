@@ -3,11 +3,11 @@ import React, { useState } from 'react';
 import axios from 'axios'; // Import real axios
 
 const Inputwrapper =
-    "flex items-center border border-purple-100 rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-purple-500 focus-within:border-purple-500 transition-all duration-200"
+    "flex items-center border border-purple-100 dark:border-gray-600 rounded-lg px-3 py-2.5 focus-within:ring-2 focus-within:ring-purple-500 dark:focus-within:ring-gray-400 focus-within:border-purple-500 dark:focus-within:border-gray-400 transition-all duration-200 dark:bg-gray-800"
 const BUTTONCLASSES =
-    "w-full bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white text-sm font-semibold py-2.5 rounded-lg hover:shadow-md transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-const MESSAGE_SUCCESS = "bg-green-50 text-green-600 p-3 rounded-lg text-sm mb-4 border border-green-100"
-const MESSAGE_ERROR = "bg-red-50 text-red-600 p-3 rounded-lg text-sm mb-4 border border-red-100"
+    "w-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white py-2.5 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-fuchsia-600 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+const MESSAGE_SUCCESS = "bg-green-50 dark:bg-green-900 text-green-600 dark:text-green-300 p-3 rounded-lg text-sm mb-4 border border-green-100 dark:border-green-800"
+const MESSAGE_ERROR = "bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-300 p-3 rounded-lg text-sm mb-4 border border-red-100 dark:border-red-800"
 
 const FIELDS = [
   { name: 'name', type: 'text', placeholder: 'Full Name', icon: User },
@@ -69,16 +69,16 @@ const SignUp = ({ onSwitchMode = () => console.log('Switch to login mode') }) =>
   };
 
   return (
-    <div className="fixed inset-0 bg-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white shadow-lg border border-purple-100 rounded-xl p-8">
+    <div className="fixed inset-0 bg-white dark:bg-gray-900 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg border border-purple-100 dark:border-gray-700 rounded-xl p-8">
         <div className="mb-6 text-center">
           <div className="w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full mx-auto flex items-center justify-center mb-4">
             <UserPlus className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
             Create Account
           </h2>
-          <p className="text-gray-500 text-sm mt-1">Join TodoForge to manage your tasks</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Join TodoForge to manage your tasks</p>
         </div>
 
         {message.text && (
@@ -106,7 +106,12 @@ const SignUp = ({ onSwitchMode = () => console.log('Switch to login mode') }) =>
             className={BUTTONCLASSES} 
             disabled={loading}
           >
-            {loading ? "Signing Up..." : (
+            {loading ? (
+              <>
+                <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+                Signing Up...
+              </>
+            ) : (
               <>
                 <UserPlus className="w-4 h-4" />
                 Sign Up

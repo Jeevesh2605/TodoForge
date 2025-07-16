@@ -14,6 +14,12 @@ const App = () => {
     const stored = localStorage.getItem('currentUser');
     return stored ? JSON.parse(stored) : null;
   });
+  
+  // Dark mode state (default to true for dark mode)
+  const [darkMode, setDarkMode] = useState(() => {
+    const stored = localStorage.getItem('darkMode');
+    return stored !== null ? JSON.parse(stored) : true;
+  });
 
   useEffect(() => {
     if (currentUser) {
@@ -22,6 +28,20 @@ const App = () => {
       localStorage.removeItem('currentUser');
     }
   }, [currentUser]);
+
+  // Dark mode effect
+  useEffect(() => {
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   const handleAuthSubmit = (data) => {
     // Store the token if it exists in the response
@@ -82,7 +102,7 @@ const App = () => {
         path="/"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout} />
+            <Layout user={currentUser} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           ) : (
             <Navigate to="/login" replace />
           )
@@ -94,7 +114,7 @@ const App = () => {
         path="/pending"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout} />
+            <Layout user={currentUser} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           ) : (
             <Navigate to="/login" replace />
           )
@@ -106,7 +126,7 @@ const App = () => {
         path="/complete"
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout} />
+            <Layout user={currentUser} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
           ) : (
             <Navigate to="/login" replace />
           )
@@ -118,7 +138,7 @@ const App = () => {
         path="/profile" 
         element={
           currentUser ? (
-            <Layout user={currentUser} onLogout={handleLogout}>
+            <Layout user={currentUser} onLogout={handleLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
               <Profile 
                 user={currentUser} 
                 setCurrentUser={setCurrentUser} 

@@ -8,11 +8,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const BUTTON_CLASSES = "w-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white py-2.5 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-fuchsia-600 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50";
 
-const INPUTWRAPPER = "relative flex items-center bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 focus-within:border-purple-500 focus-within:bg-white transition-colors";
+const INPUTWRAPPER = "relative flex items-center bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg px-3 py-2.5 focus-within:border-purple-500 focus-within:bg-white dark:focus-within:bg-gray-600 transition-colors";
 
 const INITIAL_FORM = { email: "", password: "" };
 
-const Login = ({ onSubmit, onSwitchMode }) => {
+const Login = ({ onSubmit, onSwitchMode, isDarkMode }) => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(INITIAL_FORM);
   const navigate = useNavigate();
@@ -79,15 +79,15 @@ const Login = ({ onSubmit, onSwitchMode }) => {
   ];
 
   return (
-    <div className='fixed inset-0 bg-white flex items-center justify-center p-4' style={{backgroundColor: 'white', width: '100vw', height: '100vh'}}>
-      <div className='max-w-md bg-white w-full shadow-lg border border-purple-100 rounded-xl p-8'>
+    <div className={`fixed inset-0 ${isDarkMode ? 'dark' : ''} bg-white dark:bg-gray-900 flex items-center justify-center p-4`} style={{width: '100vw', height: '100vh'}}>
+      <div className='max-w-md bg-white dark:bg-gray-800 w-full shadow-lg border border-purple-100 dark:border-gray-700 rounded-xl p-8'>
       <ToastContainer position='top-center' autoClose={3000} hideProgressBar />
       <div className='mb-6 text-center'>
         <div className='w-16 h-16 bg-gradient-to-br from-fuchsia-500 to-purple-600 rounded-full mx-auto flex items-center justify-center mb-4'>
           <LogIn className='w-8 h-8 text-white' />
         </div>
-        <h2 className='text-2xl font-bold text-gray-800'>Welcome Back!</h2>
-        <p className='text-gray-500 text-sm mt-1'>Sign in to Continue</p>
+        <h2 className='text-2xl font-bold text-gray-800 dark:text-white'>Welcome Back!</h2>
+        <p className='text-gray-500 dark:text-gray-400 text-sm mt-1'>Sign in to Continue</p>
       </div>
       
       <form onSubmit={handleSubmit} className='space-y-4'>
@@ -99,14 +99,14 @@ const Login = ({ onSubmit, onSwitchMode }) => {
               placeholder={placeholder} 
               value={formData[name]} 
               onChange={(e) => setFormData({ ...formData, [name]: e.target.value })}
-              className='w-full focus:outline-none text-sm text-gray-700 ml-3' 
+              className='w-full focus:outline-none text-sm text-gray-700 dark:text-gray-200 ml-3 bg-transparent placeholder-gray-400 dark:placeholder-gray-500' 
               required 
             />
             {isPassword && (
               <button 
                 type='button' 
                 onClick={() => setShowPassword((prev) => !prev)}
-                className='ml-2 text-gray-500 hover:text-purple-500 transition-colors'
+                className='ml-2 text-gray-500 dark:text-gray-400 hover:text-purple-500 transition-colors'
               >
                 {showPassword ? <EyeOff className='w-5 h-5' /> : <Eye className='w-5 h-5' />}
               </button>
@@ -120,9 +120,9 @@ const Login = ({ onSubmit, onSwitchMode }) => {
             id='rememberMe' 
             checked={rememberMe} 
             onChange={() => setRememberMe(!rememberMe)}
-            className='h-4 w-4 text-purple-500 focus:ring-purple-400 border-gray-300 rounded'
+            className='h-4 w-4 text-purple-500 focus:ring-purple-400 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded'
           />
-          <label htmlFor="rememberMe" className='ml-2 block text-sm text-gray-700'>
+          <label htmlFor="rememberMe" className='ml-2 block text-sm text-gray-700 dark:text-gray-300'>
             Remember me (keep me logged in)
           </label>
         </div>
@@ -142,11 +142,11 @@ const Login = ({ onSubmit, onSwitchMode }) => {
         </button>
       </form>
       
-      <p className='text-center text-sm text-gray-600 mt-6'>
+      <p className='text-center text-sm text-gray-600 dark:text-gray-400 mt-6'>
         Don't have an account?{' '}
         <button 
           type='button' 
-          className='text-purple-600 hover:text-purple-700 hover:underline font-medium transition-colors' 
+          className='text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:underline font-medium transition-colors' 
           onClick={handleSwitchMode}
         >
           Sign Up

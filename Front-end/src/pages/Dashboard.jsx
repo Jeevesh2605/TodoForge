@@ -115,11 +115,11 @@ const filteredTasks = useMemo(() => {
     <div className={WRAPPER}>
       <div className={HEADER}>
         <div className="min-w-0">
-          <h1 className="text-xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <h1 className="text-xl md:text-3xl font-bold text-white flex items-center gap-2">
             <HomeIcon className="text-purple-500 w-5 h-5 md:h-6 shrink-0" />
             <span className="truncate"> Task Overview </span>
           </h1>
-          <p className="text-sm text-gray-500 mt-1 ml-7 truncate">Manage your tasks efficiently</p>
+          <p className="text-sm text-gray-300 mt-1 ml-7 truncate">Manage your tasks efficiently</p>
         </div>
         <button onClick={() => setShowModal(true)} className={ADD_BUTTON}>
           <Plus size={18} />
@@ -214,7 +214,7 @@ const filteredTasks = useMemo(() => {
           className='hidden md:flex items-center justify-center p-4 border-2 border-dashed border-purple-200
            rounded-xl hover:border-purple-400 bg-purple-50/50 cursor-pointer transition-colors'>
           <Plus className='w-5 h-5 text-purple-500 mr-2' />
-          <span className='text-gray-600 font-medium'>Add New Task</span>
+          <span className='text-black font-medium'>Add New Task</span>
         </div>
       </div>
 

@@ -107,35 +107,35 @@ import {
     { text: "Completed Tasks", path: "/complete", icon: <CheckCircle2 className="w-5 h-5" /> },
   ];
   
-  export const SIDEBAR_CLASSES = {
-    desktop: "hidden md:flex flex-col fixed h-full w-20 lg:w-64 bg-white/90 backdrop-blur-sm border-r border-purple-100 shadow-sm z-20 transition-all duration-300",
-    mobileButton: "absolute md:hidden top-25 left-5 z-50 bg-purple-600 text-white p-2 rounded-full shadow-lg hover:bg-purple-700 transition",
-    mobileDrawerBackdrop: "fixed inset-0 bg-black/40 backdrop-blur-sm",
-    mobileDrawer: "absolute top-0 left-0 w-64 h-full bg-white/90 backdrop-blur-md border-r border-purple-100 shadow-lg z-50 p-4 flex flex-col space-y-6",
-  };
+export const SIDEBAR_CLASSES = {
+  desktop: "hidden md:flex flex-col fixed h-full w-20 lg:w-64 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-r border-purple-100 dark:border-gray-700 shadow-sm z-20 transition-all duration-300",
+  mobileButton: "absolute md:hidden top-25 left-5 z-50 bg-purple-600 dark:bg-purple-500 text-white p-2 rounded-full shadow-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition",
+  mobileDrawerBackdrop: "fixed inset-0 bg-black/40 backdrop-blur-sm",
+  mobileDrawer: "absolute top-0 left-0 w-64 h-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border-r border-purple-100 dark:border-gray-700 shadow-lg z-50 p-4 flex flex-col space-y-6",
+};
   
-  export const LINK_CLASSES = {
-    base: "group flex items-center px-4 py-3 rounded-xl transition-all duration-300",
-    active: "bg-gradient-to-r from-purple-50 to-fuchsia-50 border-l-4 border-purple-500 text-purple-700 font-medium shadow-sm",
-    inactive: "hover:bg-purple-50/50 text-gray-600 hover:text-purple-700",
-    icon: "transition-transform duration-300 group-hover:scale-110 text-purple-500",
-    text: "text-sm font-medium ml-2",
-  };
+export const LINK_CLASSES = {
+  base: "group flex items-center px-4 py-3 rounded-xl transition-all duration-300",
+  active: "bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-gray-700 dark:to-gray-600 border-l-4 border-purple-500 dark:border-purple-400 text-purple-700 dark:text-purple-300 font-medium shadow-sm",
+  inactive: "hover:bg-purple-50/50 dark:hover:bg-gray-800/50 text-gray-600 dark:text-gray-300 hover:text-purple-700 dark:hover:text-purple-300",
+  icon: "transition-transform duration-300 group-hover:scale-110 text-purple-500 dark:text-purple-400",
+  text: "text-sm font-medium ml-2",
+};
   
-  export const PRODUCTIVITY_CARD = {
-    container: "bg-purple-50/50 rounded-xl p-3 border border-purple-100",
-    header: "flex items-center justify-between mb-2",
-    label: "text-xs font-semibold text-purple-700",
-    badge: "text-xs bg-purple-200 text-purple-700 px-2 py-0.5 rounded-full",
-    barBg: "w-full h-2 bg-purple-200 rounded-full overflow-hidden",
-    barFg: "h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 animate-pulse",
-  };
+export const PRODUCTIVITY_CARD = {
+  container: "bg-purple-50/50 dark:bg-gray-800/50 rounded-xl p-3 border border-purple-100 dark:border-gray-700",
+  header: "flex items-center justify-between mb-2",
+  label: "text-xs font-semibold text-purple-700 dark:text-purple-300",
+  badge: "text-xs bg-purple-200 dark:bg-purple-800 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full",
+  barBg: "w-full h-2 bg-purple-200 dark:bg-gray-700 rounded-full overflow-hidden",
+  barFg: "h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 dark:from-purple-400 dark:to-purple-500 animate-pulse",
+};
   
   export const TIP_CARD = {
-    container: "bg-gradient-to-r from-purple-50 to-fuchsia-50 rounded-xl p-4 border border-purple-100",
-    iconWrapper: "p-2 bg-purple-100 rounded-lg",
-    title: "text-sm font-semibold text-gray-800",
-    text: "text-xs text-gray-600 mt-1",
+    container: "bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 border border-purple-100 dark:border-gray-600",
+    iconWrapper: "p-2 bg-purple-100 dark:bg-purple-800 rounded-lg",
+    title: "text-sm font-semibold text-gray-800 dark:text-gray-100",
+    text: "text-xs text-gray-600 dark:text-gray-300 mt-1",
   };
   
   // PRIORITY UTILITIES
@@ -215,7 +215,7 @@ import {
     page: "p-4 md:p-6 min-h-screen overflow-hidden",
     header: "flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-3 md:gap-4",
     titleWrapper: "flex-1 min-w-0",
-    title: "text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-2 truncate",
+    title: "text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-2 truncate",
     subtitle: "text-xs md:text-sm text-gray-500 mt-1 ml-7 md:ml-8",
     sortContainer: "w-full md:w-auto mt-2 md:mt-0",
     sortBox: "flex items-center justify-between bg-white p-2 md:p-3 rounded-xl shadow-sm border border-purple-100 w-full md:w-auto",

@@ -97,8 +97,8 @@ const Profile = ({ setCurrentUser, onLogout }) => {
             {profile.name ? profile.name[0].toUpperCase() : "U"}
           </div>
           <div>
-            <h1 className='text-2xl font-bold text-gray-800'>Account Settings</h1>
-            <p className='text-gray-500 text-sm'>Manage your Profile and security settings</p>
+            <h1 className='text-2xl font-bold text-white'>Account Settings</h1>
+            <p className='text-gray-300 text-sm'>Manage your Profile and security settings</p>
           </div>
         </div>
 

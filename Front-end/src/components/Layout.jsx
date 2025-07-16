@@ -5,7 +5,7 @@ import { Circle, Clock, Zap, TrendingUp } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import axios from 'axios';
 
-const Layout = ({ onLogout, user, children }) => {
+const Layout = ({ onLogout, user, children, darkMode, toggleDarkMode }) => {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,16 +68,16 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
   }, [tasks]);
 
   const StatCard = ({ title, value, icon }) => (
-    <div className='p-2 sm:p-3 rounded-xl bg-white shadow-sm border border-purple-100 hover:shadow-md transition-all duration-300 hover:border-purple-100 group'>
+    <div className='p-2 sm:p-3 rounded-xl bg-white dark:bg-gray-800 shadow-sm border border-purple-100 dark:border-gray-700 hover:shadow-md transition-all duration-300 hover:border-purple-100 dark:hover:border-purple-400 group'>
       <div className='flex items-center gap-2'>
-        <div className='p-1.5 rounded-lg bg-gradient-to-br from-fuchsia-500/10 group-hover:from-fuchsia-500/20 group-hover:to-purple-500/20'>
+        <div className='p-1.5 rounded-lg bg-gradient-to-br from-fuchsia-500/10 dark:from-white/10 group-hover:from-fuchsia-500/20 group-hover:to-purple-500/20 dark:group-hover:from-white/20 dark:group-hover:to-white/20'>
           {icon}
         </div>
         <div className='min-w-0'>
-          <p className='text-lg sm:text-xl font-bold bg-gradient-to-r from-fuchsia-500 to-purple-600 bg-clip-text text-transparent'>
+          <p className='text-lg sm:text-xl font-bold bg-gradient-to-r from-fuchsia-500 to-purple-600 dark:from-white dark:to-gray-200 bg-clip-text text-transparent'>
             {value}
           </p>
-          <p className='text-xs text-gray-500 font-medium'>{title}</p>
+          <p className='text-xs text-white dark:text-gray-400 font-medium'>{title}</p>
         </div>
       </div>
     </div>
@@ -86,7 +86,7 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
   // Show loading spinner while fetching tasks
   if (loading) {
     return (
-      <div className='min-h-screen bg-gray-50 flex items-center justify-center'>
+      <div className='min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center'>
         <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500' />
       </div>
     );
@@ -95,13 +95,13 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
   // Show error state
   if (error) {
     return (
-      <div className='min-h-screen bg-gray-50 p-6 flex items-center justify-center'>
-        <div className='bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 max-w-md'>
+      <div className='min-h-screen bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center'>
+        <div className='bg-red-50 dark:bg-red-900 text-red-600 dark:text-red-400 p-4 rounded-xl border border-red-100 dark:border-red-800 max-w-md'>
           <p className='font-medium mb-2'>Error Loading</p>
           <p className='text-sm'>{error}</p>
           <button
             onClick={fetchTasks}
-            className='mt-4 py-2 px-4 bg-red-100 text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 transition-colors'
+            className='mt-4 py-2 px-4 bg-red-100 dark:bg-red-800 text-red-700 dark:text-red-300 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-700 transition-colors'
           >
             Try Again
           </button>
@@ -116,8 +116,8 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
   const SidebarStats = () => (
     <div className='xl:col-span-1 space-y-4 sm:space-y-6'>
       {/* Task Statistics */}
-      <div className='bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100'>
-        <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 flex items-center gap-2'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100 dark:border-gray-700'>
+        <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-2'>
           <TrendingUp className='w-4 h-4 sm:h-5 sm:w-5 text-purple-500' />
           Task Statistics
         </h3>
@@ -143,22 +143,22 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
             icon={<Zap className='w-3.5 h-3.5 sm:h-4 text-purple-500' />}
           />
         </div>
-        <hr className='my-3 sm:my-4 border-purple-100' />
+        <hr className='my-3 sm:my-4 border-purple-100 dark:border-gray-600' />
         <div className='space-y-2 sm:space-y-3'>
-          <div className='flex items-center justify-between text-gray-700'>
+          <div className='flex items-center justify-between text-gray-700 dark:text-gray-300'>
             <span className='text-xs sm:text-sm font-medium flex items-center gap-1.5'>
               <Circle className='w-2.5 h-2.5 sm:w-3 sm:h-3 text-purple-500 fill-purple-500' />
               Task Progress
             </span>
-            <span className='text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 sm:px-2 rounded-full'>
+            <span className='text-xs bg-purple-100 dark:bg-gray-600 text-purple-700 dark:text-gray-200 px-1.5 py-0.5 sm:px-2 rounded-full'>
               {stats.completedTasks}/{stats.totalCount}
             </span>
           </div>
           <div className='relative pt-1'>
             <div className='flex gap-1.5 items-center'>
-              <div className='flex-1 h-2 sm:h-3 bg-purple-100 rounded-full overflow-hidden'>
+              <div className='flex-1 h-2 sm:h-3 bg-purple-100 dark:bg-gray-600 rounded-full overflow-hidden'>
                 <div
-                  className='h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 transition-all duration-500'
+                  className='h-full bg-gradient-to-r from-fuchsia-500 to-purple-600 dark:from-white dark:to-gray-300 transition-all duration-500'
                   style={{ width: `${stats.completionPercentage}%` }}
                 />
               </div>
@@ -168,8 +168,8 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
       </div>
 
       {/* Recent Activity */}
-      <div className='bg-white rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100'>
-        <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 flex items-center gap-2'>
+      <div className='bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-5 shadow-sm border border-purple-100 dark:border-gray-700'>
+        <h3 className='text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 dark:text-gray-200 flex items-center gap-2'>
           <Clock className='w-4 h-4 sm:w-5 sm:h-5 text-purple-500' />
           Recent Activity
         </h3>
@@ -177,13 +177,13 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
           {tasks.slice(0, 3).map((task) => (
             <div
               key={task._id || task.id}
-              className='flex items-center justify-between p-2 sm:p-3 hover:bg-purple-50/50 rounded-lg transition-colors duration-200 border-transparent hover:border-purple-100'
+              className='flex items-center justify-between p-2 sm:p-3 hover:bg-purple-50/50 dark:hover:bg-gray-700/50 rounded-lg transition-colors duration-200 border-transparent hover:border-purple-100 dark:hover:border-gray-600'
             >
               <div className='flex-1 min-w-0'>
-                <p className='text-sm font-medium text-gray-700 break-words whitespace-normal'>
+                <p className='text-sm font-medium text-gray-700 dark:text-gray-300 break-words whitespace-normal'>
                   {task.title}
                 </p>
-                <p className='text-xs text-gray-500 mt-0.5'>
+                <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
                   {task.createdAt
                     ? new Date(task.createdAt).toLocaleDateString()
                     : "NO DATE"}
@@ -195,8 +195,8 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
                    task.completed === 1 || 
                    (typeof task.completed === 'string' && 
                     ['yes', 'true', '1'].includes(task.completed.toLowerCase())))
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-fuchsia-100 text-fuchsia-700'
+                    ? 'bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300'
+                    : 'bg-fuchsia-100 dark:bg-fuchsia-800 text-fuchsia-700 dark:text-fuchsia-300'
                 }`}
               >
                 {(task.completed === true || 
@@ -235,8 +235,8 @@ const { data } = await axios.get("http://localhost:4000/api/tasks/gp", {
   
 
   return (
-    <div className='min-h-screen bg-gray-50'>
-      <Navbar user={user} onLogout={onLogout} />
+    <div className='min-h-screen bg-gray-50 dark:bg-gray-900'>
+      <Navbar user={user} onLogout={onLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 <Sidebar user={user} taskUpdateTrigger={taskUpdateTrigger} />
       
       <div className='ml-0 xl:ml-72 lg:ml-72 md:ml-20 pt-16 p-1 sm:p-2 md:p-2 transition-all duration-300'>
