@@ -4,6 +4,7 @@ import 'dotenv/config'
 import {connectDB} from './config/db.js'
 import userRouter from './routes/userRoutes.js'
 import taskRouter from './routes/taskRoutes.js'
+import aiRouter from './routes/aiRoutes.js'
 import { errorHandler } from './middleware/validation.js'
 
 const app = express();
@@ -24,6 +25,7 @@ connectDB();
 
 app.use("/api/user", userRouter);
 app.use("/api/tasks", taskRouter);
+app.use("/api/ai", aiRouter);
 
 app.get('/', (req, res) =>{
     res.json({
