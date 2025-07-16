@@ -9,12 +9,10 @@ import { errorHandler } from './middleware/validation.js'
 const app = express();
 const port = process.env.PORT || 4000;
 
-//MIDDLEWARE
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({extended: true, limit: '10mb' }));
 
-// Security middleware
 app.use((req, res, next) => {
     res.header('X-Content-Type-Options', 'nosniff');
     res.header('X-Frame-Options', 'DENY');
@@ -22,10 +20,8 @@ app.use((req, res, next) => {
     next();
 });
 
-//DB CONNECT
 connectDB();
 
-//ROUTES
 app.use("/api/user", userRouter);
 app.use("/api/tasks", taskRouter);
 
@@ -37,7 +33,6 @@ app.get('/', (req, res) =>{
     });
 })
 
-// 404 handler
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -45,10 +40,8 @@ app.use('*', (req, res) => {
     });
 });
 
-// Error handling middleware (should be last)
 app.use(errorHandler);
 
-// Global error handlers
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     process.exit(1);
