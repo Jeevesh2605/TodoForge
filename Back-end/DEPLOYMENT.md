@@ -31,6 +31,15 @@ Set these environment variables in your Render dashboard:
 4. Replace `<username>`, `<password>`, and `<cluster>` in the connection string
 
 ### 2. Render Setup
+
+#### Option A: Using render.yaml (Recommended)
+1. Log into your Render dashboard
+2. Click "New" → "Web Service"
+3. Connect your GitHub repository
+4. Render will automatically detect the `render.yaml` file and use its configuration
+5. Set the required environment variables (see below)
+
+#### Option B: Manual Configuration
 1. Log into your Render dashboard
 2. Click "New" → "Web Service"
 3. Connect your GitHub repository

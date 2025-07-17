@@ -3,14 +3,11 @@ services:
     name: todoforge-backend
     env: node
     plan: free
-    rootDir: Back-end
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: ./build.sh
+    startCommand: ./start.sh
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: MONGODB_URI
         sync: false # Set this in Render dashboard
       - key: JWT_SECRET
