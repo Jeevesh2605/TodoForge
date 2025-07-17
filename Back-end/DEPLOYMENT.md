@@ -39,7 +39,7 @@ Set these environment variables in your Render dashboard:
    - **Name**: todoforge-backend
    - **Environment**: Node
    - **Root Directory**: `Back-end` (IMPORTANT: Set this to point to the backend folder)
-   - **Build Command**: `npm install`
+   - **Build Command**: `npm ci --omit=dev`
    - **Start Command**: `npm start`
    - **Plan**: Free (or paid for better performance)
    - **Auto-Deploy**: Yes (recommended)
