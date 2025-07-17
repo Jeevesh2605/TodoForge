@@ -3,6 +3,7 @@ services:
     name: todoforge-backend
     env: node
     plan: free
+    rootDir: Back-end
     buildCommand: npm install
     startCommand: npm start
     envVars:
