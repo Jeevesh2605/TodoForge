@@ -95,7 +95,12 @@ export const validateTask = (req, res, next) => {
 
 // Error handling middleware
 export const errorHandler = (err, req, res, next) => {
-    console.error('Error:', err);
+    console.error('Error Details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+        code: err.code
+    });
 
     // MongoDB duplicate key error
     if (err.code === 11000) {
@@ -116,6 +121,14 @@ export const errorHandler = (err, req, res, next) => {
         });
     }
 
+    // MongoDB connection errors
+    if (err.name === 'MongoError' || err.name === 'MongoNetworkError') {
+        return res.status(500).json({
+            success: false,
+            message: 'Database connection error'
+        });
+    }
+
     // JWT errors
     if (err.name === 'JsonWebTokenError') {
         return res.status(401).json({
@@ -131,9 +144,29 @@ export const errorHandler = (err, req, res, next) => {
         });
     }
 
-    // Default error
-    res.status(err.statusCode || 500).json({
+    // Bcrypt errors
+    if (err.message && err.message.includes('hash')) {
+        return res.status(500).json({
+            success: false,
+            message: 'Password processing error'
+        });
+    }
+
+    // Token creation errors
+    if (err.message === 'Token creation failed') {
+        return res.status(500).json({
+            success: false,
+            message: 'Authentication service error'
+        });
+    }
+
+    // Default error - handle all other cases
+    const statusCode = err.statusCode || err.status || 500;
+    const message = err.message || 'Internal server error';
+    
+    res.status(statusCode).json({
         success: false,
-        message: err.message || 'Internal server error'
+        message: message,
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
     });
 };

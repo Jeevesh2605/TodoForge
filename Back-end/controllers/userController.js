@@ -4,9 +4,21 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
-const TOKEN_EXPIRE = '24h';
+const TOKEN_EXPIRE = process.env.JWT_EXPIRES_IN || '24h';
 
-const createToken = (userId) => jwt.sign({id: userId}, JWT_SECRET, {expiresIn: TOKEN_EXPIRE });
+// Validate JWT_SECRET exists
+if (!process.env.JWT_SECRET) {
+    console.warn('⚠️  JWT_SECRET not set in environment variables, using default (not recommended for production)');
+}
+
+const createToken = (userId) => {
+    try {
+        return jwt.sign({id: userId}, JWT_SECRET, {expiresIn: TOKEN_EXPIRE });
+    } catch (error) {
+        console.error('Error creating JWT token:', error);
+        throw new Error('Token creation failed');
+    }
+};
 
 //Register Function
 export async function registerUser(req, res){
@@ -32,6 +44,7 @@ export async function registerUser(req, res){
         res.status(201).json({success: true, token, user:{id: user._id, name: user.name, email: user.email}});
     }
     catch(err){
+        console.error('Register error:', err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }
@@ -56,6 +69,7 @@ export async function loginUser(req, res){
         res.json({success: true, token, user: {id: user._id, name: user.name, email: user.email}});
     }
     catch(err){
+        console.error('Login error:', err);
         res.status(500).json({success: false, message: "Server error"});
     }
 }

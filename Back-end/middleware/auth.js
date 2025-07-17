@@ -3,6 +3,11 @@ import User from '../models/userModel.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_here';
 
+// Validate JWT_SECRET exists
+if (!process.env.JWT_SECRET) {
+    console.warn('⚠️  JWT_SECRET not set in environment variables, using default (not recommended for production)');
+}
+
 export default async function authMiddleware(req, res, next) {
     // GRAB THE BEARER TOKEN FROM AUTHORIZATION HEADER
     const authHeader = req.headers.authorization;
