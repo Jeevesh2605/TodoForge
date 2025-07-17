@@ -32,14 +32,6 @@ Set these environment variables in your Render dashboard:
 
 ### 2. Render Setup
 
-#### Option A: Using render.yaml (Recommended)
-1. Log into your Render dashboard
-2. Click "New" → "Web Service"
-3. Connect your GitHub repository
-4. Render will automatically detect the `render.yaml` file and use its configuration
-5. Set the required environment variables (see below)
-
-#### Option B: Manual Configuration
 1. Log into your Render dashboard
 2. Click "New" → "Web Service"
 3. Connect your GitHub repository
@@ -50,6 +42,7 @@ Set these environment variables in your Render dashboard:
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
    - **Plan**: Free (or paid for better performance)
+   - **Auto-Deploy**: Yes (recommended)
 
 ### 3. Environment Variables
 In the Render dashboard, go to Environment and add all the required variables listed above.
