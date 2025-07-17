@@ -5,7 +5,7 @@ import { BACK_BUTTON, DANGER_BTN, FULL_BUTTON, INPUT_WRAPPER, personalFields, SE
 import { ChevronLeft, UserCircle, Save, Shield, LogOut, Lock } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-const API_URL = 'http://localhost:4000'
+const API_URL = 'https://todoforge-backend.onrender.com'
 
 // Input component
 const Input = ({ className, ...props }) => (

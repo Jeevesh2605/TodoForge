@@ -5,7 +5,7 @@ import axios from 'axios'
 // import { format, isToday } from 'date-fns'
 import TaskModal from './TaskModal'
 
-const API_BASE = 'http://localhost:4000/api/tasks'
+const API_BASE = 'https://todoforge-backend.onrender.com/api/tasks'
 
 const TaskItem = ({ task, onRefresh, onLogout, showCompleteCheckbox = true, onEdit }) => {
   const [showMenu, setShowMenu] = useState(false)
