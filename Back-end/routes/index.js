@@ -1,14 +1,13 @@
-const express = require('express');
-const router = express.Router();
+import express from 'express';
+import userRoutes from './userRoutes.js';
+import taskRoutes from './taskRoutes.js';
+import aiRoutes from './aiRoutes.js';
 
-// Import individual route files
-const userRoutes = require('./userRoutes');
-const taskRoutes = require('./taskRoutes');
-const aiRoutes = require('./aiRoutes');
+const router = express.Router();
 
 // Use the routes
 router.use('/users', userRoutes);
 router.use('/tasks', taskRoutes);
 router.use('/ai', aiRoutes);
 
-module.exports = router;
+export default router;
