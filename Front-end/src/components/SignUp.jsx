@@ -96,7 +96,7 @@ const SignUp = ({ onSwitchMode = () => console.log('Switch to login mode') }) =>
                 placeholder={placeholder} 
                 value={formData[name]}
                 onChange={(e) => handleInputChange(name, e.target.value)}
-                className="w-full focus:outline-none text-sm text-gray-700" 
+                className="w-full focus:outline-none text-sm text-white" 
               />
             </div>
           ))}
