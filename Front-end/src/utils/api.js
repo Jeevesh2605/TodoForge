@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: 'https://todoforge-backend.onrender.com',
+  baseURL: 'http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

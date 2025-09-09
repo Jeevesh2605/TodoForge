@@ -1,0 +1,21 @@
+
+services:
+  backend:
+    build: ./Back-end
+    container_name: todoforge-backend
+    ports:
+      - "6000:5000"
+    env_file:
+      - ./Back-end/.env
+    restart: unless-stopped
+
+  frontend:
+    build: ./Front-end
+    container_name: todoforge-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:4000
+    depends_on:
+      - backend
+    restart: unless-stopped

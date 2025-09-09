@@ -10,7 +10,7 @@ const AiForgeChatbox = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const API_URL = 'https://todoforge-backend.onrender.com/api/ai/chat';
+  const API_URL = 'http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com/api/ai/chat';
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
