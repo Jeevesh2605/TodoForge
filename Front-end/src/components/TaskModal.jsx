@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { baseControlClasses, DEFAULT_TASK, priorityStyles } from '../assets/dummy'
 import { AlignLeft, Calendar, PlusCircle, X, Flag, Save, CheckCircle } from 'lucide-react'
 
-const API_BASE = 'http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com/api/tasks'
+const API_BASE = 'https://todoforge-backend.onrender.com/api/tasks'
 
 const TaskModal = ({ isOpen, onClose, taskToEdit, onSave, onLogout }) => {
   const [taskData, setTaskData] = useState(DEFAULT_TASK)

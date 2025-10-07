@@ -15,7 +15,7 @@ const FIELDS = [
   { name: 'password', type: 'password', placeholder: 'Password', icon: Lock }
 ];
 
-const API_URL = "http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com";
+const API_URL = "https://todoforge-backend.onrender.com";
 const INITIAL_FORM = { name: "", email: "", password: "" };
 
 const SignUp = ({ onSwitchMode = () => console.log('Switch to login mode') }) => {

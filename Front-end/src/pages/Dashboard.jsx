@@ -26,7 +26,7 @@ import TaskModal from '../components/TaskModal'
 import AiForgeChatbox from '../components/AiForge'
 import axios from 'axios'
 
-const API_BASE = 'http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com/api/tasks'
+const API_BASE = 'https://todoforge-backend.onrender.com/api/tasks'
 
 const Dashboard = () => {
   const { tasks = [], refreshTasks } = useOutletContext() || {}

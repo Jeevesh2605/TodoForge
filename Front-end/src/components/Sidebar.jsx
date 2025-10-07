@@ -19,7 +19,7 @@ const username = user?.name || "User";
         const token = localStorage.getItem('token');
         if (!token) return;
         
-        const { data } = await axios.get("http://todoforge-env.eba-y7mayiri.ap-south-1.elasticbeanstalk.com/api/tasks/gp", {
+        const { data } = await axios.get("https://todoforge-backend.onrender.com/api/tasks/gp", {
           headers: { Authorization: `Bearer ${token}` }
         });
         
